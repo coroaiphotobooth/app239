@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { GalleryItem, Concept, PhotoboothSettings, ProcessNotification } from '../types';
 import { fetchGallery } from '../lib/appsScript';
+import { GalleryTabSwitcher, GalleryTab } from './GalleryHub';
 
 interface VideoGalleryPageProps {
   onBack: () => void;
@@ -11,6 +12,8 @@ interface VideoGalleryPageProps {
   notifications?: ProcessNotification[];
   cachedItems: GalleryItem[];
   onUpdateCache: (items: GalleryItem[]) => void;
+  activeTab?: GalleryTab;
+  onTabChange?: (tab: GalleryTab) => void;
 }
 
 // Get video play URL (proxy to avoid CORS)
@@ -157,6 +160,8 @@ const VideoGalleryPage: React.FC<VideoGalleryPageProps> = ({
   activeEventId,
   cachedItems,
   onUpdateCache,
+  activeTab = 'videos',
+  onTabChange,
 }) => {
   const [items, setItems] = useState<GalleryItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -246,9 +251,12 @@ const VideoGalleryPage: React.FC<VideoGalleryPageProps> = ({
           </svg>
           BACK
         </button>
-        <h2 className="text-3xl md:text-5xl font-heading text-white neon-text italic uppercase tracking-tighter text-center bg-black/20 backdrop-blur-sm px-6 py-2 rounded-lg">
-          VIDEO GALLERY
-        </h2>
+        <div className="flex items-center gap-4">
+          <h2 className="text-3xl md:text-5xl font-heading text-white neon-text italic uppercase tracking-tighter text-center bg-black/20 backdrop-blur-sm px-6 py-2 rounded-lg">
+            GALLERY
+          </h2>
+          {onTabChange && <GalleryTabSwitcher activeTab={activeTab} onTabChange={onTabChange} />}
+        </div>
         <div className="w-[100px] shrink-0" /> {/* Spacer for alignment */}
       </div>
 

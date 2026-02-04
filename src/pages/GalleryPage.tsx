@@ -3,6 +3,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { GalleryItem, Concept, PhotoboothSettings, ProcessNotification } from '../types';
 import { fetchGallery, fetchImageBase64, deletePhotoFromGas, deleteAllPhotosFromGas } from '../lib/appsScript';
 import { printImage } from '../lib/printUtils'; // Import Print Utils
+import { GalleryTabSwitcher, GalleryTab } from './GalleryHub';
 
 interface GalleryPageProps {
   onBack: () => void;
@@ -13,6 +14,8 @@ interface GalleryPageProps {
   notifications?: ProcessNotification[]; 
   cachedItems: GalleryItem[]; // Receive cache
   onUpdateCache: (items: GalleryItem[]) => void; // Update cache fn
+  activeTab?: GalleryTab;
+  onTabChange?: (tab: GalleryTab) => void;
 }
 
 // Helper: Get Image URL
@@ -128,7 +131,9 @@ const GalleryPage: React.FC<GalleryPageProps> = ({
     settings, 
     notifications = [],
     cachedItems,
-    onUpdateCache
+    onUpdateCache,
+    activeTab = 'photos',
+    onTabChange
 }) => {
   const [items, setItems] = useState<GalleryItem[]>(cachedItems);
   const [selectedItem, setSelectedItem] = useState<GalleryItem | null>(null);
@@ -421,7 +426,10 @@ const GalleryPage: React.FC<GalleryPageProps> = ({
           <svg className="w-6 h-6 transform group-hover:-translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
           BACK
         </button>
-        <h2 className="text-3xl md:text-5xl font-heading text-white neon-text italic uppercase tracking-tighter text-center bg-black/20 backdrop-blur-sm px-6 py-2 rounded-lg">PHOTO GALLERY</h2>
+        <div className="flex items-center gap-4">
+          <h2 className="text-3xl md:text-5xl font-heading text-white neon-text italic uppercase tracking-tighter text-center bg-black/20 backdrop-blur-sm px-6 py-2 rounded-lg">GALLERY</h2>
+          {onTabChange && <GalleryTabSwitcher activeTab={activeTab} onTabChange={onTabChange} />}
+        </div>
         <button onClick={handleClearClick} className="flex items-center gap-2 text-red-500 hover:text-red-400 uppercase tracking-widest font-bold text-xs transition-all border border-red-900/30 px-4 py-2 rounded-lg bg-red-900/10 hover:bg-red-900/30 shrink-0 backdrop-blur-md">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
             <span className="hidden md:inline">CLEAR GALLERY</span>

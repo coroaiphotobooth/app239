@@ -10,7 +10,7 @@ import LandingPage from './pages/LandingPage';
 import ThemesPage from './pages/ThemesPage';
 import CameraPage from './pages/CameraPage';
 import ResultPage from './pages/ResultPage';
-import GalleryPage from './pages/GalleryPage';
+import GalleryHub from './pages/GalleryHub';
 import AdminPage from './pages/AdminPage';
 import MonitorPage from './pages/MonitorPage';
 import FastThanksPage from './pages/FastThanksPage';
@@ -272,19 +272,19 @@ const App: React.FC = () => {
         />;
       case AppState.FAST_THANKS:
         return <FastThanksPage onDone={handleReset} />;
-      case AppState.GALLERY:
-        return (
-            <GalleryPage 
-                onBack={() => setCurrentPage(AppState.LANDING)} 
-                activeEventId={settings.activeEventId} 
-                onRegenerate={handleRegenerate} 
-                concepts={concepts} 
-                settings={settings} 
-                notifications={notifications}
-                cachedItems={galleryCache} 
-                onUpdateCache={setGalleryCache} 
-            />
-        );
+case AppState.GALLERY:
+  return (
+  <GalleryHub
+  onBack={() => setCurrentPage(AppState.LANDING)}
+  activeEventId={settings.activeEventId}
+  onRegenerate={handleRegenerate}
+  concepts={concepts}
+  settings={settings}
+  notifications={notifications}
+  cachedItems={galleryCache}
+  onUpdateCache={setGalleryCache}
+  />
+  );
       case AppState.ADMIN:
         return <AdminPage settings={settings} concepts={concepts} onSaveSettings={handleUpdateSettings} onSaveConcepts={handleUpdateConcepts} onBack={() => setCurrentPage(AppState.LANDING)} onLaunchMonitor={() => setCurrentPage(AppState.MONITOR)} />;
       case AppState.MONITOR:
