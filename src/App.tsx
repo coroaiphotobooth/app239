@@ -12,7 +12,7 @@ import LandingPage from './pages/LandingPage';
 import ThemesPage from './pages/ThemesPage';
 import CameraPage from './pages/CameraPage';
 import ResultPage from './pages/ResultPage';
-import GalleryPage from './pages/GalleryPage';
+import GalleryHub from './pages/GalleryHub';
 import AdminPage from './pages/AdminPage';
 import MonitorPage from './pages/MonitorPage';
 import FastThanksPage from './pages/FastThanksPage';
@@ -334,7 +334,7 @@ const App: React.FC = () => {
         return <FastThanksPage onDone={handleReset} />;
       case AppState.GALLERY:
         return (
-            <GalleryPage 
+            <GalleryHub 
                 onBack={() => setCurrentPage(AppState.LANDING)} 
                 activeEventId={settings.activeEventId} 
                 onRegenerate={handleRegenerate} 
