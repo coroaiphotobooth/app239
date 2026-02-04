@@ -19,12 +19,15 @@ interface VideoGalleryPageProps {
 // Get video play URL (proxy to avoid CORS)
 const getVideoPlayUrl = (item: GalleryItem): string => {
   if (item.providerUrl) {
+    console.log("[v0] Video using providerUrl:", item.providerUrl);
     return `/api/video/proxy?url=${encodeURIComponent(item.providerUrl)}`;
   }
   if (item.videoFileId) {
     const targetUrl = `https://drive.google.com/uc?export=download&id=${item.videoFileId}`;
+    console.log("[v0] Video using videoFileId:", item.videoFileId, "->", targetUrl);
     return `/api/video/proxy?url=${encodeURIComponent(targetUrl)}`;
   }
+  console.log("[v0] Video has no providerUrl or videoFileId:", item);
   return '';
 };
 
@@ -109,7 +112,10 @@ const VideoCard: React.FC<{
           muted
           playsInline
           loop
-          onError={() => setHasError(true)}
+          onError={(e) => {
+            console.log("[v0] Video error for item:", item.id, "URL:", videoUrl, "Event:", e);
+            setHasError(true);
+          }}
           className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${
             isPlaying ? 'opacity-100' : 'opacity-0'
           }`}
@@ -172,11 +178,19 @@ const VideoGalleryPage: React.FC<VideoGalleryPageProps> = ({
 
   // Filter video items: videoStatus is "done" or "ready_url" AND has providerUrl or videoFileId
   const filterVideoItems = useCallback((data: GalleryItem[]): GalleryItem[] => {
-    return data.filter(
+    console.log("[v0] Total gallery items:", data.length);
+    const videoItems = data.filter(
       (item) =>
         (item.videoStatus === 'done' || item.videoStatus === 'ready_url') &&
         (item.providerUrl || item.videoFileId)
     );
+    console.log("[v0] Filtered video items:", videoItems.length, videoItems.map(i => ({
+      id: i.id,
+      videoStatus: i.videoStatus,
+      providerUrl: i.providerUrl,
+      videoFileId: i.videoFileId
+    })));
+    return videoItems;
   }, []);
 
   // Load gallery
