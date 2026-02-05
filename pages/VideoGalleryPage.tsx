@@ -172,9 +172,17 @@ const VideoGalleryPage: React.FC<VideoGalleryPageProps> = ({
   const [items, setItems] = useState<GalleryItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [visibleIds, setVisibleIds] = useState<Set<string>>(new Set());
+  const [maxConcurrent, setMaxConcurrent] = useState(4);
 
   // Concurrent playback limit: 2 mobile, 4 desktop
-  const maxConcurrent = typeof window !== 'undefined' && window.innerWidth < 768 ? 2 : 4;
+  useEffect(() => {
+    const updateMaxConcurrent = () => {
+      setMaxConcurrent(window.innerWidth < 768 ? 2 : 4);
+    };
+    updateMaxConcurrent();
+    window.addEventListener('resize', updateMaxConcurrent);
+    return () => window.removeEventListener('resize', updateMaxConcurrent);
+  }, []);
 
   // Filter video items: videoStatus is "done" or "ready_url" AND has providerUrl or videoFileId
   const filterVideoItems = useCallback((data: GalleryItem[]): GalleryItem[] => {
