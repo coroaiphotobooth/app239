@@ -32,6 +32,8 @@ export default async function handler(req: any, res: any) {
     }
 
     console.log(`[API Image] Processing with model: ${selectedModel}`);
+    console.log(`[API Image] ARK_API_KEY exists: ${!!process.env.ARK_API_KEY}`);
+    console.log(`[API Image] OPENAI_API_KEY exists: ${!!process.env.OPENAI_API_KEY}`);
 
     // 2. ROUTING LOGIC
 
